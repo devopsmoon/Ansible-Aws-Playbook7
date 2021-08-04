@@ -47,7 +47,7 @@
 
     - name: creating the instance for bastion host
       ec2:
-        key_name: vpofile-key
+        key_name: vpofile
         region: "{{region}}"
         instance_type: t2.micro
         image: "{{bastion_ami}}"
