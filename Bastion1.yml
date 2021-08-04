@@ -9,3 +9,60 @@
 
     - name: importing the variable file
       include_vars: vars/vpc_setup
+
+    - name: importing the variable files
+      include_vars: vars/out_put.vars
+
+    - name: creating the keypair in aws
+      ec2_key:
+        name: vprofile-key
+        region: "{{region}}"
+        state: present
+      register: keyout
+
+    - debug:
+        var: keyout
+
+    - name: saving the key in aws
+      copy:
+        content: "{{keyout.key.private_key}}"
+        dest: ./loginkey11.pem
+        mode: 000
+      when: keyout.changed
+
+    - name: creating the security group for bastion host
+      ec2_group:
+        name: bastionsg
+        description: allow 22 from from any where
+        region: "{{region}}"
+        vpc_id: "{{vpcoutid}}"
+        state: present
+        rules:
+          - proto: tcp
+            from_port: 80
+            to_port: 80
+            cidr_ip: "{{MYIP}}"
+      register: bastionsg_out
+
+
+    - name: creating the instance for bastion host
+      ec2:
+        key_name: vpofile-key
+        region: "{{region}}"
+        state: present
+        instance_type: t2.micro
+        image: "{{bastion_ami}}"
+        instance_tags:
+          name: Bastion-host
+          project: vprofile
+          owner: devops
+        exact_count: 1
+        count_tag:
+          name: Bastion-host
+          project: vprofile
+          owner: devops
+        wait: yes
+        wait_timeout: 300
+        group_id: "{{bastionsg_out.group_id}}"
+        vpc_subnet_id: "{{pubsub1id}}"
+      register: bastiohost_out
