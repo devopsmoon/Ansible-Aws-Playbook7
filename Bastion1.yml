@@ -49,7 +49,6 @@
       ec2:
         key_name: vpofile-key
         region: "{{region}}"
-        state: present
         instance_type: t2.micro
         image: "{{bastion_ami}}"
         instance_tags:
