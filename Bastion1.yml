@@ -1,0 +1,11 @@
+- name: creating the bastion host setup
+  hosts: localhost
+  become: true
+  connection: local
+  gather_facts: false
+  tasks:
+    - name: importing the variable files
+      include_vars: vars/Bastion_setup
+
+    - name: importing the variable file
+      include_vars: vars/vpc_setup
