@@ -51,6 +51,7 @@
         region: "{{region}}"
         instance_type: t2.micro
         image: "{{bastion_ami}}"
+        wait: yes
         instance_tags:
           name: Bastion-host
           project: vprofile
@@ -60,8 +61,6 @@
           name: Bastion-host
           project: vprofile
           owner: devops
-        wait: yes
-        wait_timeout: 300
         group_id: "{{bastionsg_out.group_id}}"
         vpc_subnet_id: "{{pubsub1id}}"
       register: bastiohost_out
