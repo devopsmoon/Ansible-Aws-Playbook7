@@ -26,7 +26,7 @@
     - name: saving the key in aws
       copy:
         content: "{{keyout.key.private_key}}"
-        dest: ./loginkey11.pem
+        dest: "./loginkey11.pem"
         mode: 000
       when: keyout.changed
 
